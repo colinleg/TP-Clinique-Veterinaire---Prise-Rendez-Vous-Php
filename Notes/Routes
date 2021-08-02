@@ -1,0 +1,72 @@
+Les routes sont définies par le biais du router. Mais on ne les contrôles que 
+par l'ajout d'une fonction dans le controller ( Blog par exemple.)
+On fait alors appel à la fonction getView('nomDeLaPage.php') qui est une methode 
+de la class 'Util'. 
+Cette dernière méthode fait appel à la méthode _get(), qui stocke la string du 
+chemin complet dans une variable, et si le chemin isFile(), alors utilise 
+require pour l'insérer. Sinon renvoie que le fichier n'existe pas. 
+
+
+A l'entrée de l'url, le htaccess indique, transmet des parametres par get : p = 1 , a = 0.
+si ces paramètres sont vides, p = veto, et a = accueil. Comme écrit dans index.php
+Ensuite on lance le router, via fonction run() dans Engine/router.php
+
+
+*** Router.php ***
+
+dans Router.php, il y a la classe Router. 
+cette classe est composée d'une unique méthode : run ( array $aPrams).
+
+    Definition Variables 
+
+
+    il définit une string correspondant à un espace de nom $sNamespace = 'BlogPhp\Controller\'
+    définit un string correspondant aux controllers $sDefCtrl = BlogPhp\Controller\Veto
+    string chemin des controleurs = CHEMIN RACINE(ROOT_PATH) . Controller/
+        -> Qu'est ce que ROOT_PATH ? c'est /srv/Veterinaire/
+    string Controleur sCtrl ucfirst(param['ctrl]) -> met premiere lettre majuscule, de soi 1 soi veto 
+
+
+    la méthode run()
+
+    si ... /srv/Veterinaire/Controller/Veto.php ...est un fichier 
+
+    $sCtrl n'est plus égal à 'Veto' mais est égale à ... BlogPhp\Controller\Veto 
+        -> sCtrl n'est plus un fichier, mais la classe que contient ce fichier. 
+        -> ici sCtrl sera la class Veto 
+
+    $oCtrl = new $sCtrl, c'est à dire qu'on instancie un nouvel objet, de 
+        la classe Veto. 
+
+
+    si la classe Veto contient une methode qui s'appelle param[act] ( soi '2' soi 'accueil') 
+        et que cette méthode est publique :
+
+    lance la fonction _loadClasses du Loader qui était dans un spl_autoloader_register
+    donc call_user_func prends deux arguments : la classe, la fonction de cette classe
+
+*** Loader.php ***
+
+Loader.php definit la class Loader
+il inclut deux traits : 
+    base.trait -> final __construct() et clone()
+    singleton -> $oInstance = null 
+    public function getInstance(); qui Renvoie la classe d'instance ou crée la première instance de la classe.
+
+
+class Loader 
+    public func init() : enregistre une fonction dans une pile autoload : _loadClasse
+        (qui appartient a la classe Loader)
+
+    private func _loadClasses(parametre = une fonction dans une class controleur)
+
+    string = remplace __NAMESPACE__ c'est à dire ici BlogPhp\Engine 
+                l'expression 'BlogPhp' 
+                et \\ 
+                par ... 
+                / 
+                sur $sClass c'est à dire le parametre reçu.
+
+    -> 1) qu'est ce que sClass ? un tableau [ un objet ( ici une instance de la classe Veto ), une string ( nom de la fonction a appeler dans la classe)]
+
+    -> 2) devient quoi ? Un truc comme ça : /Controller/Veto.php
