@@ -1,6 +1,6 @@
 <?php require 'inc/header.php' ?>
 <?php require 'inc/topbar.php' ?>
-<div class="container">
+<div class="container mt-20">
   <div class="row">
   	<div class="col l4 m6 s12 offset-l4 offset-m3">
   		<div class="card-panel">
@@ -30,7 +30,7 @@
   				</div>
 
   				<center>
-  					<button type="submit" name="submit" class="waves-effect waves-light btn light-blue">
+  					<button type="submit" name="submit" class="waves-effect waves-light btn bg-blue-400">
   						<i class="material-icons left">perm_identity</i>
   						Se connecter
   					</button>

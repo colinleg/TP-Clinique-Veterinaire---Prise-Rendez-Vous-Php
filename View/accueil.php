@@ -1,3 +1,7 @@
 <?php require 'inc/header.php' ?>
 <?php require 'inc/topbar.php' ?>
-<h1>Chien et chats s'occupe de vos animaux préférés</h1>
+
+<main class="h-100">
+<h1 class="text-5xl flex justify-center m-10">Bienvenue sur le site de la clinique </h1>
+</main>
+<?php require 'inc/footer.php' ?>
