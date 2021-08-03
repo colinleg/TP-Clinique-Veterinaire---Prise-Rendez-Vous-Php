@@ -12,9 +12,9 @@
 
   			<h4 class="center-align">Se connecter</h4>
 
-        <center>
+    
           <?php require 'inc/msg.php' ?>
-        </center>
+        
 
   			<form method="post">
   				<div class="row">
@@ -29,18 +29,18 @@
   					</div>
   				</div>
 
-  				<center>
+  			
   					<button type="submit" name="submit" class="waves-effect waves-light btn bg-blue-400">
   						<i class="material-icons left">perm_identity</i>
   						Se connecter
   					</button>
-  				</center>
+  				
   			</form>
 
   		</div>
-      <center>
+    
         <a href="<?=ROOT_URL?>blog_registration.html">Pas encore inscrit ?</a>
-      </center>
+      
   	</div>
   </div>
 </div>
