@@ -16,8 +16,15 @@ class Veto
      ***** SELECT *****
      */
 
+    public function getMyRdvs(){
+      $id=1;
+      $oStmt = $this->oDb->query('SELECT * FROM Horaire');
+      $oStmt->bindValue(':id', $id, \PDO::PARAM_INT);
+      return $oStmt->execute();
+  }
+  
     public function creneauxDispos(){
-        $oStmt = $this->oDb->query("SELECT * FROM creneauxDispos");
+        $oStmt = $this->oDb->query("SELECT * FROM horaireLibre");
         $oStmt->execute();
         return $oStmt->fetchAll(\PDO::FETCH_OBJ);
       }

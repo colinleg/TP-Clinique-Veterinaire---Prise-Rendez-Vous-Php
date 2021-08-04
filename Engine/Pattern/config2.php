@@ -6,10 +6,10 @@ final class Config
 {
     // Identifiants Database
     const
-    DB_HOST = 'localhost',
+    DB_HOST = 'synolego.synology.me:44132',
     DB_NAME = 'veterinaire-ecf6',
-    DB_USR = 'colin',
-    DB_PWD = 'bebopalula1995',
+    DB_USR = 'dwwm',
+    DB_PWD = 'dwwm21',
 
     // Titre du site
     SITE_NAME = 'Clinique Veterinaire';

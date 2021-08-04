@@ -13,7 +13,7 @@ class Veto{
 
     // Propriétés 
 
-    protected $oUtil, $oModel;
+    protected $oUtil, $oModel, $oSession;
     private $_iId; 
 
     // Méthodes 
@@ -28,7 +28,7 @@ class Veto{
         $this->oModel = new \BlogPhp\Model\Veto;
 
         /** Récupère l'identifiant de publication dans le constructeur afin d'éviter la duplication du même code **/
-        $this->_iId = (int) (!empty($_GET['id']) ? $_GET['id'] : 0);
+        // $this->_iId = (int) (!empty($_GET['id']) ? $_GET['id'] : 0);
     }
 
     // accueil.php
@@ -39,11 +39,25 @@ class Veto{
     // rdv.php
     public function rdv(){
         $this->oUtil->oCrenos = $this->oModel->creneauxDispos();
-        foreach($this->oUtil->oCrenos as $oCreno){
+		if(!empty($_POST['jour']))
+		{
+			$aData = $_POST;
+			$this->nouveauRdv($aData);
+		}
+		else
+		{
+			$this->oUtil->getView('rdv');
+		}
         
-        }
-        $this->oUtil->getView('rdv');
     }
+
+	// nouveauRdv.php
+	public function nouveauRdv($aData){
+		$this->oUtil->date = $aData['jour'];
+		$this->oUtil->heureDeb = $aData['heureDebut'];
+		$this->oUtil->heureFin = $aData['heureFin'];
+		$this->oUtil->getView('nouveauRdv');
+	}
 
     // veterinaires.php
     public function veterinaires(){
@@ -86,6 +100,7 @@ class Veto{
 				{
 					if ($oIsAdmin->admin != null)
 					{
+
 						$_SESSION['is_admin'] = $oIsAdmin->pseudo; // Admin est connecté maintenant
 						header('Location: ' . ROOT_URL . 'veto_accueil.html');
 						exit;
@@ -97,15 +112,26 @@ class Veto{
 						exit;
 					}
 				}
-			}
-
+			} 
+			
 			$this->oUtil->getView('login');
 	}
+	
+	// set la variable global $oSession qui sera accessible dans la class Admin
+	public function setOSession($pseudo){
+		$this->oSession = $pseudo;
+	}
+
 
     // si admin est connecté return true
 	protected function isLogged()
 	{
 		return !empty($_SESSION['is_admin']);
+	}
+
+	protected function userIsLogged()
+	{
+		return !empty($_SESSION['is_user']);
 	}
 
     public function logout()

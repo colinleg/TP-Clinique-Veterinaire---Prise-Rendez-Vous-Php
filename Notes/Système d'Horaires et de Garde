@@ -1,0 +1,34 @@
+** Système d'Horaires  : 
+
+Chacun des vétérinaires de la clinique a des horaires. 
+Chacun a également des horaires de garde. c'est à dire en dehors de ses horaires.
+
+Les horaires de chacun se font en fonction des rendez vous. 5 jours dans la semaine. 
+
+Si un rendez vous est pris : les horaires s'ajustent automatiquement.
+
+- On ne peut prendre rendez vous qu'à partir du lendemain de la date de prise de rendez vous. 
+
+- Le matin, le vétérinaire connaît ses horaires via le site. 
+
+
+
+
+** Système de Garde le weekend: 
+
+il y a 4 weekends dans un mois.
+Il y a x Veterinaires dans la clinique. ( au moins 4 ce serait mieux )
+
+Si 4 veterinaires : un veterinaire a un week end de garde par mois
+	soit 4:4 weekend de garde par mois.
+
+Si x veterinaires : un veterinaire a 4/x weekend de garde par mois. 
+
+si 7 veterinaires : un veterinaire a 4/7 weekend de garde, c'est à dire un weekend tous les 6 weekends
+
+1) connaitre le nombre de vétérinaire. 
+2) connaitre le nombre de weekend par mois : static = 4
+3) distribuer un idVeterinaire différent, boucle au nombre de veterinaire.
+4) faire un lien entre admin et veterinaire  -> a) quel est mon id user -> b) quel est mon idVeterinaire
+
+

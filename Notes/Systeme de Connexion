@@ -1,0 +1,28 @@
+concernant le Login j'ai dans Controller/Blog 
+
+	-isLogged() , userIsLogged() , registration(), login(), construct()
+
+j'ai dans Controller/Veto :
+	- construct(), login(), isLogged(), userIsLogged(), logout()
+	-> tout sauf registration 
+	
+	
+dans Model/Blog : 
+	
+	
+	
+	
+	
+	 <?php foreach ($this->oRdvs as $oRdv): ?>
+                <tr>
+                    <th><?= $oRdv->jour ?></th>
+                    <th><?= $oRdv->heureDebut ?></th>
+                    <th><?= $oRdv->heureFin ?></th>
+                </tr>
+                
+            <?php endforeach ?>
+            
+            je suis donc admin et donc non-user
+            
+            j'ai ma variable de session $SESSION_['is_admin'] ok, verifie dans vue rdv.php
+            et ma var de session $SESSION_['is_user'] à undefined

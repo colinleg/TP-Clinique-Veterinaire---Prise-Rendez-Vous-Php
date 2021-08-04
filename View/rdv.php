@@ -1,5 +1,7 @@
 <?php require 'inc/header.php' ?>
 <?php require 'inc/topbar.php' ?>
+<?php require 'func/frenchDate.php' ?>
+
 <main class="h-100 flex flex-col items-center ">
 
 
@@ -23,16 +25,6 @@
 
     <!-- Il faut connaitre les horaires disponibles, et donc connaîtrer les horaires non dispo -->
         <div id="ctnr_dates" class="w-100 flex justify-around" style="flex-wrap : wrap;">
-            <?php
-
-                function dateToFrench($date, $format) {
-                $english_days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-                $french_days = array('lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche');
-                $english_months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-                $french_months = array('janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre');
-                return str_replace($english_months, $french_months, str_replace($english_days, $french_days, date($format, strtotime($date) ) ) );
-                }
-            ?>
 
         <?php
         $i=0;
@@ -42,22 +34,31 @@
         }
             
         foreach ($this->oCrenos as $creno): ?>
+            <form action="#" method="post">
 
-            <div class="h-48 w-64 border border-grey-700 rounded-lg shadow-lg ml-16 hover:bg-blue-100 cursor-pointer my-28 mx-24">
+            <!-- On envoie le jour et la date au controlleur, en post -->
+            <input class="hidden" name="jour" value="<?= $creno->jour ?>">
+            <input class="hidden" name="heureDebut" value="<?= $creno->heureDebut ?>">
+            <input class="hidden" name="heureFin" value="<?= $creno->heureFin ?>">
 
-                <!-- affiche la date  -->
-                <div class="flex justify-center items-center text-white h-16 bg-blue-500 w-100 p-4 rounded-lg shadow-lg font-bold">
-                    <a href="#" class=" cursor-pointer my-8"><?= dateToFrench($creno->jour,'l j F Y') ?> 
-                </div>
-
-                <!-- affiche l'heure  -->
-                <div class="flex h-1/2 justify-center items-center">
-                   <p> de <?= date('H:i',strtotime($creno->heureDebut)) ?> à <?= date('H:i',strtotime($creno->heureFin)) ?></p> <br>
-                </div>
-
+            <button type="submit">
+                <div class="h-48 w-64 border border-grey-700 rounded-lg shadow-lg  hover:bg-blue-100 m-6 z-0">
                 
-             
-            </div>
+                    <!-- affiche la date  -->
+                    <div class="flex justify-center items-center text-white h-16 bg-blue-500 w-100 p-4 rounded-lg shadow-lg font-bold">
+                        <a href="#" class="my-8"><?= dateToFrench($creno->jour,'l j F Y') ?> 
+                    </div>
+
+                    <!-- affiche l'heure  -->
+                    <div class="flex h-1/2 justify-center items-center">
+                    <p> de <?= date('H:i',strtotime($creno->heureDebut)) ?> à <?= date('H:i',strtotime($creno->heureFin)) ?></p> <br>
+                    </div>
+                    
+                </div>
+            </button>  
+
+            </form>
+            
         
         <?php if (++$i == 3) break; endforeach ?>
 
