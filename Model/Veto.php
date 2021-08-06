@@ -23,14 +23,24 @@ class Veto
       return $oStmt->execute();
   }
   
-    public function creneauxDispos(){
+    public function crenoDispos($jour){
+      $oStmt = $this->oDb->prepare("SELECT heureDebut, heureFin  FROM horaireRdv WHERE Occupe = 0 AND jour = :jour");
+      $oStmt->bindValue(':jour', $jour, \PDO::PARAM_STR);
+      $oStmt->execute();
 
-        $oStmt = $this->oDb->query("SELECT * FROM horaireRdv WHERE Occupe = 0");
+      return $oStmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function creneauxDispos(){
+        
+        $oStmt = $this->oDb->query("SELECT  FROM horaireRdv WHERE Occupe = 0");
         $oStmt->execute();
 
-        return $oStmt->fetchAll(\PDO::FETCH_OBJ);
+        return $oStmt->fetchAll(\PDO::FETCH_ASSOC);
 
     }
+
+  
     // à vérifier 
     public function getIdPropByData($aData){
 
@@ -44,6 +54,16 @@ class Veto
 
     }
 
+
+    public function getDateDispos(){
+      $date = date('Y:m:d');
+      // DISTINCT évite les doublons
+      $oStmt = $this->oDb->prepare("SELECT DISTINCT jour FROM horaireRdv WHERE Occupe = 0 AND jour >= :date ");
+      $oStmt->bindValue(":date", $date, \PDO::PARAM_STR);
+      $oStmt->execute();
+
+      return $oStmt->fetchAll(\PDO::FETCH_OBJ);
+    }
     /**
      ***** INSERT *****
      */

@@ -29,7 +29,7 @@ class Veto{
 
         /** Récupère l'identifiant de publication dans le constructeur afin d'éviter la duplication du même code **/
         // $this->_iId = (int) (!empty($_GET['id']) ? $_GET['id'] : 0);
-    }
+    } 
 
     // accueil.php
     public function accueil(){
@@ -38,7 +38,19 @@ class Veto{
 
     // rdv.php
     public function rdv(){
-        $this->oUtil->oCrenos = $this->oModel->creneauxDispos();
+
+		$this->oUtil->dateDispos = $dateDispos = $this->oModel->getDateDispos();
+		$i = 0;
+		foreach($dateDispos as $dd){
+			
+			$jour = $dd->jour;
+			$this->oUtil->crenos[$i] = $this->oModel->crenoDispos($jour);
+			$i++;
+		}
+        // $this->oUtil->oCrenos = $this->oModel->creneauxDispos($dateDispos);
+
+
+
 		if(!empty($_POST['jour']))
 		{
 			$aData = $_POST;

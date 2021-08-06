@@ -20,56 +20,54 @@
     <p class="mb-10"> Si votre animal est un cas d'urgence, vous pouvez également faire appel à notre service
         de garde vétérinaire disponible 24/24
     </p>
+    
+    
+    <h2 class="text-4xl my-4 mb-10"> Les prochaines horaires disponibles</h2>
 
-    <h2 class="text-4xl my-4 mb-10">Les prochaines dates disponibles</h2>
 
-    <!-- Il faut connaitre les horaires disponibles, et donc connaîtrer les horaires non dispo -->
-        <div id="ctnr_dates" class="w-100 flex justify-around" style="flex-wrap : wrap;">
+    <div id="ctnr_dates" class="w-100 flex justify-around " style="flex-wrap : wrap;">
+    <?php 
+    $i=0;
+    $z = 0;
+    if(isset($_POST['voirPlus'])) {
+        $i = $i + 12;
+    }
+    
+    foreach($this->dateDispos as $dd): 
+    ?>
+        <form action="#" method="post">
+            <div class="h-auto w-96 border border-grey-700 rounded-lg shadow-lg  hover:bg-blue-100 m-6 z-0 relative pt-20">
 
-        <?php
-        $i=0;
-       
-        if(isset($_POST['voirPlus'])) {
-            $i = $i + 6;
-        }
-            
-        foreach ($this->oCrenos as $creno): ?>
-            <form action="#" method="post">
-
-            <!-- On envoie le jour et la date au controlleur, en post -->
-            <input class="hidden" name="jour" value="<?= $creno->jour ?>">
-            <input class="hidden" name="heureDebut" value="<?= $creno->heureDebut ?>">
-            <input class="hidden" name="heureFin" value="<?= $creno->heureFin ?>">
-
-            <button type="submit">
-                <div class="h-48 w-64 border border-grey-700 rounded-lg shadow-lg  hover:bg-blue-100 m-6 z-0">
-                
-                    <!-- affiche la date  -->
-                    <div class="flex justify-center items-center text-white h-16 bg-blue-500 w-100 p-4 rounded-lg shadow-lg font-bold">
-                        <a href="#" class="my-8"><?= dateToFrench($creno->jour,'l j F Y') ?> 
-                    </div>
-
-                    <!-- affiche l'heure  -->
-                    <div class="flex h-1/2 justify-center items-center">
-                    <p> de <?= date('H:i',strtotime($creno->heureDebut)) ?> à <?= date('H:i',strtotime($creno->heureFin)) ?></p> <br>
-                    </div>
-                    
+                <!-- Affichage des dates dispos -->
+                <div class="flex justify-center items-center text-white  bg-blue-500 p-4 absolute top-0 right-0  w-full rounded-lg shadow-lg font-bold">
+                <?= dateToFrench($dd->jour,'l j F Y') ?>
                 </div>
-            </button>  
 
-            </form>
-            
-        
-        <?php if (++$i == 3) break; endforeach ?>
+                <!-- Affichage des créneaux dispos -->
+                <div class="flex flex-col justify-center items-center font-bold">
+               
 
-        
-        </div>
+                <?php 
+                for ($d = 0; $d < count($this->crenos[$z]); $d++){
+                    echo '<a href="" class="py-2 px-4 hover:bg-blue-300"> de ' . date('H', strtotime($this->crenos[$z][$d]['heureDebut'])) . ' h à ' . date('H', strtotime($this->crenos[$z][$d]['heureFin'])) . ' h' ;
+                }
+                ?>
 
-        <form method="post">
-            <input class="cursor-pointer bg-white" type="submit" name="voirPlus" value="voir plus">
+                </div>
+               
+            </div>
         </form>
         
+            <?php    
+                $z++;
+                if (++$i == 6) break;
+                endforeach;
+            ?>
     </div>
 
+    <form method="post">
+            <input class="cursor-pointer bg-white" type="submit" name="voirPlus" value="voir plus">
+    </form>
+        
 </main>
 <?php require 'inc/footer.php' ?>

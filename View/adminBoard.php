@@ -44,7 +44,7 @@
         mon session['is_admin'] = <?= $_SESSION['is_admin'] ?>;<br>
         mon numero id = <?= $_SESSION['id'][0] ?>
 
-        mon idVeterinaire = <?php echo $this->oIdVeto[0]; ?>
+
 
         <!-- Déclare data - Envoi des horaires à la base de donnée -->
         <form action="#" method="post">
@@ -109,44 +109,6 @@
             </div>
             
         </form>
-
-        <?php var_dump($this->selectHoraires)?>
-        <br>
-        selectionner le premier jour des 6 : 
-        <?= $this->selectHoraires[0]['jour'] ?>
-        <br>
-        selectionner l'heure de debut du 3e jour des 6 : 
-        <?= $this->selectHoraires[2]['heureDebut'] ?>
-
-        <br>
-
-        test boucle 
-        <br>
-<?php
-    $datas = $this->selectHoraires;
-    
-    for($j = 0; $j < count($datas) ; $j++){
-
-        $horaire = array();
-        $horaire['jour'] = $datas[$j]['jour'];
-        $horaire['idVeterinaire'] = $datas[$j]['idVeterinaire'] ;
-        $horaire['Occupe'] = 0;
-        $horaire['heureDebut'] = $datas[$j]['heureDebut'];
-        $horaire['heureFin'] = $datas[$j]['heureFin'];
-        
-        $horaire['crenos'][$j] = Fractionner($datas[$j]['heureDebut'],$datas[$j]['heureFin']);
-        for($i = 0 ; $i < count($horaire['crenos'][$j]); $i++){
-                $deb = $horaire['crenos'][$j][$i];
-                $fin = date('H:i', strtotime("+1 hour", strtotime($horaire['crenos'][$j][$i])));
-
-                echo "deb = " . $deb . "<br>";
-                echo "fin = " . $fin . "<br>"; 
-            }
-
-        echo '<br>';
-    }
-    
-?>
 
     </div>
 </main>
