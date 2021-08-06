@@ -53,10 +53,34 @@ class Veto{
 
 	// nouveauRdv.php
 	public function nouveauRdv($aData){
-		$this->oUtil->date = $aData['jour'];
-		$this->oUtil->heureDeb = $aData['heureDebut'];
-		$this->oUtil->heureFin = $aData['heureFin'];
-		$this->oUtil->getView('nouveauRdv');
+
+		
+			$this->oUtil->date = $aData['jour'];
+			$this->oUtil->heureDeb = $aData['heureDebut'];
+			$this->oUtil->heureFin = $aData['heureFin'];
+
+			$this->oUtil->getView('nouveauRdv');
+
+		}
+
+	
+
+	public function confirmRdv(){
+		if(!empty($_POST)){
+			
+				
+				$this->oUtil->data = $_POST;
+				$data = $_POST;
+				$this->oModel->addProprietaire($data); 
+				// On recupère l'id propriétaire AI qui vient d'être crée pour l'envoyer sur Animal
+				$data['idProp'] = $this->oModel->getIdPropByData($data);
+				$this->oUtil->idProp = $data['idProp'];
+				$this->oModel->addAnimal($data);
+				// $this->oModel->addRdv($bData);
+
+				$this->oUtil->msgSuccess = 'Votre rendez-vous a bien été enregistré' ;
+				$this->oUtil->getView('confirmRdv');
+		}
 	}
 
     // veterinaires.php
@@ -102,6 +126,14 @@ class Veto{
 					{
 
 						$_SESSION['is_admin'] = $oIsAdmin->pseudo; // Admin est connecté maintenant
+						//automatiser l'accès à l'id
+						$oPseudo = $oIsAdmin->pseudo;
+
+						//On se reconnecte à la classe Admin, pour avoir accès à la fonction getIdVeto
+						$this->oUtil->getModel('Admin');
+      					$this->oModel = new \BlogPhp\Model\Admin;
+
+						$_SESSION['id'] = $this->oModel->getIdVeto($oPseudo);
 						header('Location: ' . ROOT_URL . 'veto_accueil.html');
 						exit;
 					}

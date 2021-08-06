@@ -1,0 +1,1 @@
+j'ai changé les foreign keys dans table chat(idanimal), chien (idanimal), visite(idanimal), pour permettre l'autoincrémentation sur id de la table animal 

@@ -33,4 +33,26 @@ class Util
     {
         $this->$sKey = $mVal;
     }
+
+    /**
+     ***** Mes fonctions ****
+     */
+
+    public function Fractionner($StartTime, $EndTime, $Duration="60"){
+       
+     
+            $ReturnArray = array ();
+            $StartTime    = strtotime ($StartTime); // Timestamp
+            $EndTime      = strtotime ($EndTime); // Timestamp
+         
+            $AddMins  = $Duration * 60;
+         
+            while ($StartTime <= $EndTime)
+            {
+                $ReturnArray[] = date ("G:i", $StartTime);
+                $StartTime += $AddMins;
+            }
+            return $ReturnArray;
+    }
+    
 }

@@ -16,7 +16,9 @@ $creneaux = Fractionner($dTimeDebut, $dTimeFin, 60);
 
 <div class="container flex flex-col justify-center items-center w-4/6">
 
-<form action="#" method="post" class="w-100 flex flex-col justify-center items-center">
+<form action="veto_confirmRdv.html" method="post" class="w-100 flex flex-col justify-center items-center my-16">
+
+    <input class="hidden" name="date" value="<?= $this->date ?>">
 
     <label for="creno">Choisissez votre horaire</label>
 
@@ -36,10 +38,29 @@ $creneaux = Fractionner($dTimeDebut, $dTimeFin, 60);
         <input type="text" name="prenom">
 
         <label for="mail"> Adresse email : </label>
-        <input type="email" name="mail">
+        <input type="email" name="email">
 
         <label for="telephone"> N° de téléphone : </label>
-        <input type="text" class="mb-24">   
+        <input type="text" class="mb-24" name="telephone">   
+
+        <label for="nomAnimal">Nom de l'animal :</label>
+        <input type="text" class="" name="nomAnimal"> 
+        
+        
+        <label for="animal">Votre animal est un :</label>
+        <select class="mb-12" name="animal">
+
+            <option value="chat">Chat</option>
+            <option value="chien">Chien</option>
+            <option value="autre">Autre</option>
+            
+        </select>
+
+
+ 
+        
+
+
     </div>
     <div class="w-full flex justify-center mt-24">
     <button class="btn" type="submit">Prendre rendez-vous</button>
