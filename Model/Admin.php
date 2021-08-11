@@ -6,9 +6,8 @@ use PDO;
 
 class Admin extends Veto
 {
-    /**
-     ***** SELECT *****
-     */
+    #region : Select 
+
     public function getMyRdvs(){
         
         $oStmt = $this->oDb->query('SELECT * FROM Horaire');
@@ -36,16 +35,29 @@ class Admin extends Veto
         return $oStmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
+    public function getVetosRdvs($idVeto){
+        $oStmt = $this->oDb->prepare('SELECT DISTINCT * FROM horaireRdv INNER JOIN Proprietaire ON Proprietaire.id = horaireRdv.idProprietaire INNER JOIN Animal ON Animal.idProprietaire = horaireRdv.idProprietaire WHERE horaireRdv.idVeterinaire = :idVeto AND horaireRdv.Occupe = 1 ');
+        $oStmt->bindValue(':idVeto', $idVeto, \PDO::PARAM_INT);
+        $oStmt->execute();
+        
+        return $oStmt->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    public function checkDaySet($data){
+        $oStmt = $this->oDb->prepare('SELECT * FROM Horaire WHERE idVeterinaire = :idVeto AND jour = :jour ');
+        $oStmt->bindValue(':idVeto', $data['idVeto'], \PDO::PARAM_INT);
+        $oStmt->bindValue(':jour', $data['jour'], \PDO::PARAM_STR);
+
+        $oStmt->execute();
+        return  $oStmt->fetch(\PDO::FETCH_OBJ);
+    }
+
+    #endregion
   
-
-
-    /**
-     * INSERT INTO
-     */
+    #region : Insert Into 
 
     public function addSemaineLibre($data){
         
-        // $date = $aData['date'];
         $oStmt = $this->oDb->prepare('INSERT INTO Horaire(jour, heureDebut, heureFin, idVeterinaire, createdAt) VALUES (:jour, :heureDebut, :heureFin, :idVeterinaire, :createdAt)');
         $oStmt->bindValue(':jour', $data['date'], \PDO::PARAM_STR);
         $oStmt->bindValue(':heureDebut', $data['heureDebut'],\PDO::PARAM_STR);
@@ -66,4 +78,33 @@ class Admin extends Veto
         $oStmt->bindValue(':Occupe', $data['Occupe'], \PDO::PARAM_BOOL);
         $oStmt->execute();
     }
+
+    #endregion
+
+    #region: Update
+
+
+    public function updateJour($data){
+        $oStmt = $this->oDb->prepare('UPDATE Horaire SET jour = :jour, heureDebut = :heureDebut, heureFin = :heureFin, idVeterinaire = :idVeterinaire, createdAt = :createdAt WHERE jour = :jour');
+
+        $oStmt->bindValue(':jour', $data['jour'], \PDO::PARAM_STR);
+        $oStmt->bindValue(':heureDebut', $data['heureDebut'],\PDO::PARAM_STR);
+        $oStmt->bindValue(':heureFin', $data['heureFin'], \PDO::PARAM_STR);
+        $oStmt->bindValue(':idVeterinaire', $data['idVeto'], \PDO::PARAM_INT);
+        $oStmt->bindValue(':createdAt', $data['createdAt'], \PDO::PARAM_STR);
+        $res = $oStmt->execute();
+        return $res;
+
+    }
+    #endregion
+
+    #region : Delete 
+    public function deleteHorairesByDate($data){
+        $oStmt = $this->oDb->prepare('DELETE FROM horaireRdv WHERE jour = :jour AND idVeterinaire = :idVeto');
+        $oStmt->bindValue(':idVeto', $data['idVeto'], \PDO::PARAM_INT);
+        $oStmt->bindValue(':jour', $data['jour'],\PDO::PARAM_STR);
+        return $oStmt->execute();
+
+    }
+    #endregion
 }

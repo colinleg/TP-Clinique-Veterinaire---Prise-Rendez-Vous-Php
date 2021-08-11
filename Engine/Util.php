@@ -55,4 +55,8 @@ class Util
             return $ReturnArray;
     }
     
+    public function isWeekend($date) {
+        return (date('N', strtotime($date)) >= 6);
+    }
+  
 }

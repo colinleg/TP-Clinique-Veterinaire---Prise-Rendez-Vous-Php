@@ -83,7 +83,7 @@ class Veto{
 		}
 			
 	}
-
+ 
 	public function confirmRdv(){
 		if(!empty($_POST)){
 			
@@ -98,6 +98,7 @@ class Veto{
 				// On recupère l'id propriétaire AI qui vient d'être crée pour l'envoyer sur Animal
 				$data['idProp'] = $this->oModel->getIdPropByData($data);
 				$this->oUtil->idProp = $data['idProp'];
+			
 				$this->oModel->addAnimal($data);
 
 				//Recupère l'id de l'animal ---> utile pour les tables chat ou chien 

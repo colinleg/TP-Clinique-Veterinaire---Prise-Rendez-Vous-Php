@@ -99,14 +99,7 @@ class Veto
       return $oStmt->fetch(\PDO::FETCH_NUM);
     }
 
-    public function getVetosRdvs($idVeto){
-      $oStmt = $this->oDb->prepare('SELECT * FROM horaireRdv WHERE idVeterinaire = :idVeto AND Occupe = 1');
-      $oStmt->bindValue(':idVeto', $idVeto, \PDO::PARAM_INT);
-      $oStmt->execute();
-      
-      return $oStmt->fetchAll(\PDO::FETCH_OBJ);
-    }
-
+ 
     #endregion
 
     #region : Insert 
@@ -178,7 +171,7 @@ class Veto
         $oStmt = $this->oDb->prepare($sql);
         $oStmt->bindValue(':date', $data['date'], \PDO::PARAM_STR);
         $oStmt->bindValue(':heureDebut', $data['heureDebut'], \PDO::PARAM_STR);
-        $oStmt->bindValue(':idProprietaire', $data['idProp'], \PDO::PARAM_INT);
+        $oStmt->bindValue(':idProprietaire', $data['idProp'][0], \PDO::PARAM_INT);
         return $oStmt->execute();
       
      }

@@ -5,6 +5,9 @@ FAIT :
 6) gérer la décomposiion des horaires en créneaux dans la table horairerdv  
 4) gérer le cas d'intégrité : un vétérinaire peut avoir un seul horairedébut et fin par jour 
 3) gérer l'inscription au moment de prendre le rendez vous -> materialize
+7) gérer le planning weekend : on ne peut pas déclarer des horaires le weekend 
+5) bouton devient modifier les horaires, au lieu de déclarer ? 
+8) ajouter la fonctionnalité aucune dans la déclaration des horaires : pour déclarer un jour de congé par exemple 
 
 EN COURS : 
 
@@ -14,6 +17,5 @@ A FAIRE :
 
 
 4b) gérer l'erreur de mysql quand un vétérinaire essaye de déclarer une horaire déja déclarée 
-5) bouton devient modifier les horaires, au lieu de déclarer ? 
-7) gérer le planning weekend : on ne peut pas déclarer des horaires le weekend 
-8) ajouter la fonctionnalité aucune dans la déclaration des horaires : pour déclarer un jour de congé par exemple 
+
+

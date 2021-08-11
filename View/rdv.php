@@ -35,22 +35,27 @@
     
     foreach($this->dateDispos as $dd): 
     ?>
+        
         <form method="post">
             <div class="h-auto w-96 border border-grey-700 rounded-lg shadow-lg  hover:bg-blue-100 m-6 z-0 relative pt-20">
+
+                
 
                 <!-- Affichage des dates dispos -->
                 <div class="flex justify-center items-center text-white  bg-blue-500 p-4 absolute top-0 right-0  w-full rounded-lg shadow-lg font-bold">
                 <?= dateToFrench($dd->jour,'l j F Y') ?>
                 </div>
-
                 <!-- Affichage des créneaux dispos -->
                 <div class="flex flex-col justify-center items-center font-bold">
                
 
                 <?php 
                 for ($d = 0; $d < count($this->crenos[$z]); $d++){
+                 
+
                     echo '<input type="text" name="jour" value="' . $dd->jour. '" class="hidden">';
                     echo '<button type="submit" name="submit" value="'. $this->crenos[$z][$d]['heureDebut']  .'" class="rounded-lg py-2 px-4 hover:bg-blue-300"> de ' . date('H', strtotime($this->crenos[$z][$d]['heureDebut'])) . ' h à ' . date('H', strtotime($this->crenos[$z][$d]['heureFin'])) . ' h</button>' ;
+                 
                 }
                 ?>
 
@@ -58,7 +63,7 @@
                
             </div>
         </form>
-        
+       
             <?php    
                 $z++;
                 if (++$i == 6) break;
