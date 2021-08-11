@@ -4,23 +4,24 @@ namespace BlogPhp\Model;
 
 class Veto
 {
-
-    // protected $oDb;
-
+    #region : Construct
     public function __construct(){
 
         $this->oDb = new \BlogPhp\Engine\Db;
     }
+  
+  #endregion
+    
+    #region : Select
+     
 
-    /**
-     ***** SELECT *****
-     */
+    public function getMyHoraires($id){
+    
+      $oStmt = $this->oDb->prepare('SELECT * FROM Horaire WHERE idVeterinaire = :idVeto');
+      $oStmt->bindValue(':idVeto', $id, \PDO::PARAM_INT);
+      $oStmt->execute();
 
-    public function getMyRdvs(){
-      $id=1;
-      $oStmt = $this->oDb->query('SELECT * FROM Horaire');
-      $oStmt->bindValue(':id', $id, \PDO::PARAM_INT);
-      return $oStmt->execute();
+      return $oStmt->fetchAll(\PDO::FETCH_OBJ);
   }
   
     public function crenoDispos($jour){
@@ -33,10 +34,10 @@ class Veto
 
     public function creneauxDispos(){
         
-        $oStmt = $this->oDb->query("SELECT  FROM horaireRdv WHERE Occupe = 0");
-        $oStmt->execute();
+      $oStmt = $this->oDb->query("SELECT  FROM horaireRdv WHERE Occupe = 0");
+      $oStmt->execute();
 
-        return $oStmt->fetchAll(\PDO::FETCH_ASSOC);
+      return $oStmt->fetchAll(\PDO::FETCH_ASSOC);
 
     }
 
@@ -64,10 +65,52 @@ class Veto
 
       return $oStmt->fetchAll(\PDO::FETCH_OBJ);
     }
-    /**
-     ***** INSERT *****
-     */
-    //vérifiée
+
+
+
+    public function getIdUser($pseudo){
+      $oStmt = $this->oDb->prepare('SELECT id FROM Users WHERE pseudo = :pseudo LIMIT 1');
+      $oStmt->bindValue(':pseudo', $pseudo, \PDO::PARAM_STR);
+      $oStmt->execute();
+      return $oStmt->fetch(\PDO::FETCH_NUM);
+    }
+
+    public function getIdAnimal($data){
+      $oStmt = $this->oDb->prepare('SELECT id FROM Animal WHERE Nom = :nom AND idProprietaire = :idProp LIMIT 1');
+      $oStmt->bindValue(':nom', $data['nomAnimal'], \PDO::PARAM_STR);
+      $oStmt->bindValue(':idProp', $data['idProp'][0], \PDO::PARAM_STR);
+      $oStmt->execute();
+      return $oStmt->fetch(\PDO::FETCH_NUM);
+    }
+    
+    public function getIdRaceChat($nomRace){
+      $oStmt = $this->oDb->prepare('SELECT id FROM Race_chat WHERE nom = :nom LIMIT 1');
+      $oStmt->bindValue(':nom', $nomRace, \PDO::PARAM_STR);
+      $oStmt->execute();
+
+      return $oStmt->fetch(\PDO::FETCH_NUM);
+    }
+
+    public function getIdRaceChien($nomRace){
+      $oStmt = $this->oDb->prepare('SELECT id FROM Race_chien WHERE nom = :nom LIMIT 1');
+      $oStmt->bindValue(':nom', $nomRace, \PDO::PARAM_STR);
+      $oStmt->execute();
+      
+      return $oStmt->fetch(\PDO::FETCH_NUM);
+    }
+
+    public function getVetosRdvs($idVeto){
+      $oStmt = $this->oDb->prepare('SELECT * FROM horaireRdv WHERE idVeterinaire = :idVeto AND Occupe = 1');
+      $oStmt->bindValue(':idVeto', $idVeto, \PDO::PARAM_INT);
+      $oStmt->execute();
+      
+      return $oStmt->fetchAll(\PDO::FETCH_OBJ);
+    }
+
+    #endregion
+
+    #region : Insert 
+    
      public function addProprietaire($aData){
       $sql = 'INSERT INTO Proprietaire(nom, prenom, telephone, email) VALUES (:nom, :prenom, :telephone, :email)';
         $oStmt = $this->oDb->prepare($sql);
@@ -80,7 +123,6 @@ class Veto
         return $res;
      }
 
-    //vérifiée
      public function addAnimal($aData){
       $sql = 'INSERT INTO Animal(Nom,idProprietaire) VALUES (:nomAnimal, :idProprietaire)';
       $oStmt = $this->oDb->prepare($sql);
@@ -91,31 +133,61 @@ class Veto
       return $res;
      }
 
-    /**
-     ***** UPDATE *****
-     */
-
-     public function addRdv($aData){
+     public function addChat($aData){
+      $sql = 'INSERT INTO Chat(idAnimal, idRace) VALUES (:idAnimal, :idRace)';
+      $oStmt = $this->oDb->prepare($sql);
+      $oStmt->bindValue(':idAnimal', $aData['idAnimal'][0], \PDO::PARAM_INT);
+      $oStmt->bindValue(':idRace', $aData['idRaceAnimal'][0], \PDO::PARAM_INT);
       
-      
-        $sql = 'UPDATE Occupe FROM horaireRdv WHERE date = :date AND heureDebut = :heureDebut';
-        $oStmt = $this->oDb->prepare($sql);
-        $oStmt->bindValue(':date', $aData['date'], ':heureDebut', $aData['creno']);
-        $isOk = $oStmt->execute();
-      
-        return $isOk; 
-
+      $oStmt->execute();
      }
-     
 
-    /**
-     ***** DELETE *****
-     */
+     public function addChien($aData){
+      $sql = 'INSERT INTO Chien(idAnimal, idRace) VALUES (:idAnimal, :idRace)';
+      $oStmt = $this->oDb->prepare($sql);
+      $oStmt->bindValue(':idAnimal', $aData['idAnimal'][0], \PDO::PARAM_INT);
+      $oStmt->bindValue(':idRace', $aData['idRaceAnimal'][0], \PDO::PARAM_INT);
+      
+      $oStmt->execute();
+     }
 
+     public function addRaceChien($raceAnimal){
+      $sql = 'INSERT INTO Race_chien(nom) VALUES (:nom)';
+      $oStmt = $this->oDb->prepare($sql);
+      $oStmt->bindValue(':nom', $raceAnimal, \PDO::PARAM_STR);
+      
+      return $oStmt->execute();
+     }
+
+     public function addRaceChat($raceAnimal){
+      $sql = 'INSERT INTO Race_chat(nom) VALUES (:nom)';
+      $oStmt = $this->oDb->prepare($sql);
+      $oStmt->bindValue(':nom', $raceAnimal, \PDO::PARAM_STR);
+      
+      return $oStmt->execute();
+     }
+
+     #endregion
+
+    #region : Update 
+
+     public function addRdv($data){
+      
+      
+        $sql = 'UPDATE horaireRdv SET Occupe = 1, idProprietaire = :idProprietaire WHERE jour = :date AND heureDebut = :heureDebut';
+        $oStmt = $this->oDb->prepare($sql);
+        $oStmt->bindValue(':date', $data['date'], \PDO::PARAM_STR);
+        $oStmt->bindValue(':heureDebut', $data['heureDebut'], \PDO::PARAM_STR);
+        $oStmt->bindValue(':idProprietaire', $data['idProp'], \PDO::PARAM_INT);
+        return $oStmt->execute();
+      
+     }
     
-    /**
-     ***** LOGIN *****
-     */
+    #endregion
+
+    #region : Inscription et Connexion
+     
+      #region : Connexion
     public function isAdmin($sEmail)
     {
       $oStmt = $this->oDb->prepare('SELECT * FROM Users WHERE email = :email LIMIT 1');
@@ -131,6 +203,7 @@ class Veto
         'email' 	  => $sEmail,
         'password' 	=> sha1($sPassword)
       ];
+
       $sSql = "SELECT * FROM Users WHERE email = :email AND password = :password";
       $oStmt = $this->oDb->prepare($sSql);
       $oStmt->execute($a);
@@ -138,6 +211,35 @@ class Veto
   
       return $exist;
     }
+      #endregion
+    
+      #region : Inscription
+    
+    public function pseudoTaken($pseudo)
+    {
+      $oStmt = $this->oDb->prepare('SELECT * FROM Users WHERE pseudo = :pseudo');
+      $oStmt->bindParam(':pseudo', $pseudo, \PDO::PARAM_STR);
+      $oStmt->execute();
+      return $oStmt->rowCount();
+    }
+  
+  
+    public function emailTaken($sEmail)
+    {
+      $oStmt = $this->oDb->prepare('SELECT * FROM Users WHERE email = :email');
+      $oStmt->bindParam(':email', $sEmail, \PDO::PARAM_STR);
+      $oStmt->execute();
+      return $oStmt->rowCount();
+    }
+  
+  
+    public function addUser($aData)
+    {
+      $oStmt = $this->oDb->prepare('INSERT INTO Users (email, pseudo, password) VALUES(:email, :pseudo, :password)');
+      return $oStmt->execute($aData);
+    }
 
-
+      #endregion
+    
+    #endregion
 }

@@ -8,6 +8,8 @@
       <link type="text/css" rel="stylesheet" href="<?=ROOT_URL?>static/css/style.css"/>
       <!-- Import Tailwind  -->
       <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+      <!-- Import micromodal -->
+      <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <meta charset="utf-8" />

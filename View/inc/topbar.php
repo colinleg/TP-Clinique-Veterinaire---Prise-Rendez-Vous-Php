@@ -11,7 +11,7 @@
 
 			<li><a class="text-xl py-16 font-bold" href="<?=ROOT_URL?>veto_rdv.html">Rendez-vous</a></li>
 
-			<li><a class="text-xl p-16 font-bold" href="<?=ROOT_URL?>veto_veterinaires.html">Nos Vétérinaires</a></li>
+			<li><a class="text-xl p-16 font-bold" href="<?=ROOT_URL?>veto_services.html">Nos Services</a></li>
 
 			<?php if (!empty($_SESSION['is_admin'])): ?>
 				<li><a class="text-xl p-16 font-bold text-xl text-red-700" href="<?=ROOT_URL?>admin_adminBoard.html?pseudo=<?= $_SESSION['is_admin'] ?>">Admin</a></li>

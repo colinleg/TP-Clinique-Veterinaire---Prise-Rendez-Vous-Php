@@ -35,7 +35,7 @@
     
     foreach($this->dateDispos as $dd): 
     ?>
-        <form action="#" method="post">
+        <form method="post">
             <div class="h-auto w-96 border border-grey-700 rounded-lg shadow-lg  hover:bg-blue-100 m-6 z-0 relative pt-20">
 
                 <!-- Affichage des dates dispos -->
@@ -49,7 +49,8 @@
 
                 <?php 
                 for ($d = 0; $d < count($this->crenos[$z]); $d++){
-                    echo '<a href="" class="py-2 px-4 hover:bg-blue-300"> de ' . date('H', strtotime($this->crenos[$z][$d]['heureDebut'])) . ' h à ' . date('H', strtotime($this->crenos[$z][$d]['heureFin'])) . ' h' ;
+                    echo '<input type="text" name="jour" value="' . $dd->jour. '" class="hidden">';
+                    echo '<button type="submit" name="submit" value="'. $this->crenos[$z][$d]['heureDebut']  .'" class="rounded-lg py-2 px-4 hover:bg-blue-300"> de ' . date('H', strtotime($this->crenos[$z][$d]['heureDebut'])) . ' h à ' . date('H', strtotime($this->crenos[$z][$d]['heureFin'])) . ' h</button>' ;
                 }
                 ?>
 

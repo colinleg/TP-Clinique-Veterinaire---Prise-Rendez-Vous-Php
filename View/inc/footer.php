@@ -3,12 +3,12 @@
 
 <footer class="page-footer bg-blue-300">
   <div class="footer-copyright">
-    <div class="container">
-      <div class="row footer-row">
-        <div class="col l6 s12">
+    <div class="container ">
+      <div class="flex justify-around">
+        <div class="font-bold">
           Copyright © <?= date("Y"); ?> Colin LEGOEDEC
         </div>
-        <div class="col l4 offset-l2 s12">
+        <div class="">
           <a href="<?=ROOT_URL?>blog_legalNotice.html" class="white-text">Mentions légales</a>
         </div>
       </div>

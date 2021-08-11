@@ -29,6 +29,8 @@ class Admin extends Veto
         return $oStmt->fetch(\PDO::FETCH_BOTH);
       }
 
+    
+
     public function getLastAddedHoraires(){
         $oStmt = $this->oDb->query('SELECT jour, heureDebut, heureFin, idVeterinaire FROM Horaire ORDER BY createdAt DESC LIMIT 6');
         return $oStmt->fetchAll(\PDO::FETCH_ASSOC);

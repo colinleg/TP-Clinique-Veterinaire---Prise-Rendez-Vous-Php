@@ -7,17 +7,16 @@ if (empty($_GET['a'])) {
 	$_GET['a'] = 'accueil';
 }
 
-
-
 class Veto{
 
-    // Propriétés 
+    #region : Propriétés
 
     protected $oUtil, $oModel, $oSession;
     private $_iId; 
 
-    // Méthodes 
+	#endregion
 
+	#region : Construct
     public function __construct(){
         if(empty($_SESSION))
             @session_start();
@@ -31,12 +30,14 @@ class Veto{
         // $this->_iId = (int) (!empty($_GET['id']) ? $_GET['id'] : 0);
     } 
 
-    // accueil.php
+	#endregion
+	
+	#region : Méthodes par vues
+
     public function accueil(){
         $this->oUtil->getView('accueil');
     }
 
-    // rdv.php
     public function rdv(){
 
 		$this->oUtil->dateDispos = $dateDispos = $this->oModel->getDateDispos();
@@ -63,55 +64,99 @@ class Veto{
         
     }
 
-	// nouveauRdv.php
 	public function nouveauRdv($aData){
 
-		
 			$this->oUtil->date = $aData['jour'];
-			$this->oUtil->heureDeb = $aData['heureDebut'];
-			$this->oUtil->heureFin = $aData['heureFin'];
+			$this->oUtil->heureDebut = $aData['submit'];
+
+		if(!empty($_SESSION['is_user'])){
+			$this->oUtil->pseudo = $_SESSION['is_user'];
+			// pour l'affichage du modal dans la view
+			$this->oUtil->newUser = 0;
 
 			$this->oUtil->getView('nouveauRdv');
-
+		}else{
+			// pour l'affichage du modal dans la view
+			$this->oUtil->newUser = 1;
+			
+			$this->oUtil->getView('nouveauRdv');
 		}
-
-	
+			
+	}
 
 	public function confirmRdv(){
 		if(!empty($_POST)){
 			
 				
 				$this->oUtil->data = $_POST;
+
 				$data = $_POST;
+				
+
 				$this->oModel->addProprietaire($data); 
+
 				// On recupère l'id propriétaire AI qui vient d'être crée pour l'envoyer sur Animal
 				$data['idProp'] = $this->oModel->getIdPropByData($data);
 				$this->oUtil->idProp = $data['idProp'];
 				$this->oModel->addAnimal($data);
-				// $this->oModel->addRdv($bData);
 
-				$this->oUtil->msgSuccess = 'Votre rendez-vous a bien été enregistré' ;
-				$this->oUtil->getView('confirmRdv');
+				//Recupère l'id de l'animal ---> utile pour les tables chat ou chien 
+				$data['idAnimal'] = $this->oModel->getIdAnimal($data);
+
+				$this->oUtil->idAnimal= $data['idAnimal'];
+				// Toggle la colonne "Occupe" de horaireRdv
+			
+
+				$isOk = $this->oModel->addRdv($data);
+				
+				// On se servira de data['idAnimal'] et data['raceAnimal'] qui est une string pour l'instant 
+				if($data['animal'] == 'chat'){
+					if($data['raceAnimal'] !== NULL){
+						$this->oModel->addRaceChat($data['raceAnimal']);
+						$data['idRaceAnimal'] = $this->oModel->getIdRaceChat($data['raceAnimal']);
+					}
+
+					$this->oModel->addChat($data);
+
+				} else if ($data['animal']== 'chien'){
+					if($data['raceAnimal'] !== NULL){
+						$this->oModel->addRaceChien($data['raceAnimal']);
+						$data['idRaceAnimal'] = $this->oModel->getIdRaceChien($data['raceAnimal']);
+					}
+					
+					$this->oModel->addChien($data);
+				}
+
+				
+
+				if($isOk == 1){
+					$this->oUtil->msgSuccess = 'Votre rendez-vous a bien été enregistré' ;
+					$this->oUtil->getView('confirmRdv');
+				}
+				else{
+					$this->oUtil->msgSuccess = 'Nous avons eu un problème... Veuillez réessayer ' ;
+					$this->oUtil->getView('confirmRdv');
+				}
+				
 		}
 	}
 
-    // veterinaires.php
-    public function veterinaires(){
-        $this->oUtil->getView('veterinaires');
+    public function services(){
+        $this->oUtil->getView('services');
     }
 
-    // notFound.php
     public function notFound(){
         header('HTTP/1.0 404 Not Found');
         $this->oUtil->getView('notFound');
     }
 
-    // error.php
     public function error(){
         $this->oUtil->getView('error');
     }
+
+	#endregion
     
-    // **** Systeme de compte administrateur  ****
+    #region : Inscription et connexion 
 
     public function login()
 	{
@@ -145,6 +190,8 @@ class Veto{
 						$this->oUtil->getModel('Admin');
       					$this->oModel = new \BlogPhp\Model\Admin;
 
+
+						// On stocke l'idVeterinaire
 						$_SESSION['id'] = $this->oModel->getIdVeto($oPseudo);
 						header('Location: ' . ROOT_URL . 'veto_accueil.html');
 						exit;
@@ -152,6 +199,8 @@ class Veto{
 					else
 					{
 						$_SESSION['is_user'] = $oIsAdmin->pseudo; // user est connecté maintenant
+						$oPseudo = $oIsAdmin->pseudo;
+						$_SESSION['id'] = $this->oModel->getIdUser($oPseudo);
 						header('Location: ' . ROOT_URL . 'veto_accueil.html');
 						exit;
 					}
@@ -194,5 +243,53 @@ class Veto{
 		header('Location: ' . ROOT_URL);
 		exit;
 	}
-}
 
+
+	public function registration()
+	{
+			if ($this->isLogged())
+				header('Location: blog_index.html');
+
+			if (isset($_POST['submit']))
+			{
+				$sPassword = htmlspecialchars(trim($_POST['password']));
+				$sPassword_again = htmlspecialchars(trim($_POST['password_again']));
+				$sEmail = htmlspecialchars(trim($_POST['email']));
+				$sPseudo = htmlspecialchars(trim($_POST['pseudo']));
+
+				if (empty($sPassword) || empty($sPassword_again))
+				{
+					$this->oUtil->sErrMsg = "Tous les champs n'ont pas été remplis";
+				}
+
+				elseif ($sPassword != $sPassword_again)
+				{
+					$this->oUtil->sErrMsg = "Les mots de passe sont différents";
+				}
+
+				elseif ($this->oModel->emailTaken($sEmail))
+				{
+					$this->oUtil->sErrMsg = "Cette adresse email est déjà utilisée";
+				}
+
+				elseif ($this->oModel->pseudoTaken($sPseudo))
+				{
+					$this->oUtil->sErrMsg = "Ce pseudo est déjà utilisé";
+				}
+
+				else
+				{
+					$aData = array('email' => $sEmail, 'pseudo' => $sPseudo, 'password' => sha1($sPassword));
+					$this->oModel->addUser($aData);
+					?> 
+					<script>window.location.replace('blog_login.html');</script> 
+					<?php
+					$this->oUtil->sSuccMsg = 'Votre compte a été créé, vous pouvez maintenant vous connecter'; //ne fonctionne pas 
+				}
+
+			}
+
+			$this->oUtil->getView('registration');
+	}
+	#endregion
+}
